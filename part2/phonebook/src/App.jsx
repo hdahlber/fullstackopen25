@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
-import axios from "axios"
 import personService from "./services/persons"
 
 const App = () => {
@@ -21,6 +20,7 @@ const App = () => {
       })
   }, [])
 
+
   const addPerson = (event) => {
     event.preventDefault()
     const nameExists = persons.find(person => person.name === newName) !== undefined
@@ -33,7 +33,6 @@ const App = () => {
       const personObject ={
         name: newName,
         number: newNumber,
-        id: persons.length +1
       }
       personService
         .create(personObject)
@@ -42,6 +41,17 @@ const App = () => {
           setNewName("")
           setNewNumber("")
         })
+    }
+  }
+
+  const deletePerson = (id, name) => {
+    if (window.confirm(`Delete ${name}?`)) {
+      personService
+      .remove(id)
+      .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+      })
+
     }
   }
 
@@ -77,7 +87,11 @@ const App = () => {
       
 
       <h3>Numbers</h3>
-      <Persons persons={persons} newFilter={newFilter} />
+      <Persons 
+        persons={persons} 
+        newFilter={newFilter}
+        deletePerson={deletePerson}
+        />
 
     </div>
   )
