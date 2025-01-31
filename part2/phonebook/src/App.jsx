@@ -3,13 +3,15 @@ import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
 import Persons from "./components/Persons"
 import personService from "./services/persons"
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [newFilter,setFilter] =useState("")
-
+  const [newMessage, setMessage] = useState(null)
+  const [isError,setIsError] = useState(false)
 
 
   useEffect(() => {
@@ -34,15 +36,13 @@ const App = () => {
       .create(personObject)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setNewName("")
-        setNewNumber("")
+        handleMessage(`Added ${personObject.name}`, false)
       })
+      
       
     }
     else if (window.confirm(`${newName} is already added to phonebook, replace old number?`)){
       const user = persons.find(person => person.name === newName)
-      console.log(personObject);
-      
       
       personService
       .update(user.id,personObject)
@@ -51,9 +51,14 @@ const App = () => {
             person.id !== response.id ? person : response
         );
         setPersons(responsePerson)
-        setNewName("")
-        setNewNumber("")
-    })
+        handleMessage(`Uppdated ${personObject.name} number to ${personObject.number}`, false)
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      .catch(() => {
+        handleMessage(`Information of ${personObject.name} has already been removed from server`, true)
+        setPersons(persons.filter(person => person.id !== id))
+      })
+      
     }
   }
 
@@ -63,6 +68,11 @@ const App = () => {
       .remove(id)
       .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          handleMessage(`Deleted ${name}`, false)
+      })
+      .catch(() => {
+        handleMessage(`Information of ${name} has already been removed from server`, true)
+        setPersons(persons.filter(person => person.id !== id))
       })
 
     }
@@ -79,13 +89,26 @@ const App = () => {
   const handleFilterChange = (event) => {
     //console.log(event.target.value)
     setFilter(event.target.value)
-}
+  }
+  const handleMessage = (message, isError = false) => {
+    setMessage(message);
+    setIsError(isError);
+
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000)
+    setNewName("")
+    setNewNumber("")
+  }
+
+  
 
   return (
     <div>
       
 
       <h2>Phonebook</h2>
+      <Notification message={newMessage} isError={isError} />
       <Filter value={newFilter} onChange={handleFilterChange} />
       
 
