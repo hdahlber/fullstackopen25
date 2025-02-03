@@ -24,6 +24,17 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+
+app.get('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    const person = persons.find(person => person.id == id)
+    if (person){
+        response.json(person)
+    } else{
+        response.status(404).end()
+    }
+})
+
 app.get('/info',(request, response) => {
     const date = new Date()
     const personsLength =  persons ? persons.length : 0
