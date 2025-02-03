@@ -24,6 +24,25 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+
+app.post('/api/persons', (request, response) => {
+    const randID = Number(Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)).toString()
+    const { name, number } = request.body
+
+    if (!name || !number) {
+        return response.status(400).json({ error: "Name and number are required" })
+    }
+
+    const person = {
+        id: randID,
+        name,
+        number
+    }
+    persons = persons.concat(person)
+    response.json(person)
+})
+
+
 app.delete('/api/persons/:id', (request, response) => {
     const id = request.params.id
     persons = persons.filter(person => person.id !== id)
