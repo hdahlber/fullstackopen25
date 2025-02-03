@@ -24,10 +24,17 @@ let persons = [
       "number": "39-23-6423122"
     }
 ]
+app.delete('/api/persons/:id', (request, response) => {
+    const id = request.params.id
+    persons = persons.filter(person => person.id !== id)
+    response.status(204).end()
+    
+})
+
 
 app.get('/api/persons/:id', (request, response) => {
     const id = request.params.id
-    const person = persons.find(person => person.id == id)
+    const person = persons.find(person => person.id === id)
     if (person){
         response.json(person)
     } else{
