@@ -1,0 +1,7 @@
+POST https://phonebook-misty-star-3253.fly.dev/api/persons/
+Content-Type: application/json
+
+{
+    "name": "The Devil",
+    "number": "666"
+}
