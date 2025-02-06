@@ -6,9 +6,7 @@ const personSchema = new mongoose.Schema({
     name: String,
     number: String,
 })
-const Person = mongoose.model('persons', personSchema)
-
-console.log(url);
+const Person = mongoose.model("Person", personSchema)
 
 mongoose.set("strictQuery",false)
 mongoose.connect(url)
