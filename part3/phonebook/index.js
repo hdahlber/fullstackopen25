@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
-const PORT = process.env.PORT || 3001
 const app = express()
 const Person = require('./models/person')
 
@@ -18,10 +17,13 @@ morgan.token("info", (request) =>{
 
 
 app.post('/api/persons', (request, response) => {
-    const body = request.body
+    const { name, number } = request.body
+    
+    
 
-    if (body.content === undefined) {
-        return response.status(400).json({ error: 'content missing' })
+    if (!name || !number) {
+        return response.status(400).json({ error: `Content missing: ${JSON.stringify(body.content)}` });
+
     }
     const person = new Person({
         name: name,
@@ -71,7 +73,7 @@ app.get('/api/persons', (request, response) => {
         response.json(result)
       })
 })
-
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })

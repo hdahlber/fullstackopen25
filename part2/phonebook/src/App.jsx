@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Filter from "./components/Filter"
 import PersonForm from "./components/PersonForm"
-import Persons from "./components/Persons"
+import Person from "./components/Person"
 import personService from "./services/persons"
 import Notification from './components/Notification'
 
@@ -13,20 +13,26 @@ const App = () => {
   const [newMessage, setMessage] = useState(null)
   const [isError,setIsError] = useState(false)
 
-
-  useEffect(() => {
+  const hook = () => {
+    
     personService
-      .getAll()
-      .then(initialPersons =>{
-        setPersons(initialPersons)
-      })
-  }, [])
+        .getAll()
+        .then(response => {
+           
+            console.log(response)
+            setPersons(response)
+
+        })
+    } 
+    useEffect(hook, [])
+  
+  
 
 
   const addPerson = (event) => {
     event.preventDefault()
     const nameExists = persons.find(person => person.name === newName) !== undefined
-    //console.log(nameExists);
+   
     const personObject ={
       name: newName,
       number: newNumber,
@@ -52,7 +58,7 @@ const App = () => {
         );
         setPersons(responsePerson)
         handleMessage(`Uppdated ${personObject.name} number to ${personObject.number}`, false)
-        setPersons(persons.filter(person => person.id !== id))
+       
       })
       .catch(() => {
         handleMessage(`Information of ${personObject.name} has already been removed from server`, true)
@@ -107,7 +113,7 @@ const App = () => {
     <div>
       
 
-      <h2>Phonebook</h2>
+      <h2>Phonebook:</h2>
       <Notification message={newMessage} isError={isError} />
       <Filter value={newFilter} onChange={handleFilterChange} />
       
@@ -123,11 +129,10 @@ const App = () => {
       
 
       <h3>Numbers</h3>
-      <Persons 
-        persons={persons} 
-        newFilter={newFilter}
-        deletePerson={deletePerson}
-        />
+      {persons.map((persons) =>
+        <Person key={persons.id} id={persons.id} name={persons.name} number={persons.number} deletePerson={deletePerson} />
+        )
+      }
 
     </div>
   )
