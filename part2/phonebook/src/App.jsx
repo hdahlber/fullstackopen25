@@ -91,7 +91,7 @@ const deletePerson = (id, name) => {
 
         if (!personStillExists) {
           handleMessage(`Information of ${name} has already been removed from server`, true)
-          setPersons(updatedPersons); // Update state with the latest data
+          setPersons(updatedPersons)
           return
         }
 
