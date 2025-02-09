@@ -31,58 +31,88 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    const nameExists = persons.find(person => person.name === newName) !== undefined
+    
    
     const personObject ={
       name: newName,
       number: newNumber,
     }
-    if (!nameExists){
-      personService
-      .create(personObject)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-        handleMessage(`Added ${personObject.name}`, false)
-      })
+    personService
+      .getAll()
+      .then((response)=>{
+        const nameExists = response.some((person) => person.name === newName)
       
-      
-    }
-    else if (window.confirm(`${newName} is already added to phonebook, replace old number?`)){
-      const user = persons.find(person => person.name === newName)
-      
-      personService
-      .update(user.id,personObject)
-      .then((response) => {
-        const responsePerson = persons.map((person) =>
-            person.id !== response.id ? person : response
-        );
-        setPersons(responsePerson)
-        handleMessage(`Uppdated ${personObject.name} number to ${personObject.number}`, false)
-       
-      })
-      .catch(() => {
-        handleMessage(`Information of ${personObject.name} has already been removed from server`, true)
-        setPersons(persons.filter(person => person.id !== id))
-      })
-      
-    }
-  }
 
-  const deletePerson = (id, name) => {
-    if (window.confirm(`Delete ${name}?`)) {
-      personService
-      .remove(id)
-      .then(() => {
-          setPersons(persons.filter(person => person.id !== id))
-          handleMessage(`Deleted ${name}`, false)
-      })
-      .catch(() => {
-        handleMessage(`Information of ${name} has already been removed from server`, true)
-        setPersons(persons.filter(person => person.id !== id))
-      })
+        if (!nameExists){      
+          personService
+          .create(personObject)
+          .then(returnedPerson => {
+            setPersons(persons.concat(returnedPerson))
+            handleMessage(`Added ${personObject.name}`, false)
+          })
+          .catch(error =>{
+            handleMessage(error.response.data.error, true)
+          })
+          
+          
+        }else if(
+          window.confirm(`${newName} is already added to phonebook, replace old number?`)
+        ){
+          const user = response.find(person => person.name === newName)
+          
+          personService
+          .update(user.id,personObject)
+          .then(() => {
+            return personService.getAll();
+          })
+          .then((responsePersons) => {
+            setPersons(responsePersons)
+            handleMessage(`Uppdated ${personObject.name} number to ${personObject.number}`, false)
+          
+          })
+          .catch(() => {
+            handleMessage(`Information of ${personObject.name} has already been removed from server`, true)
+            setPersons(persons.filter(person => person.id !== id))
+          })
+      }
+    })
+    .catch((error) => {
+      console.error('Error fetching persons:', error)
+      handleMessage('Error fetching person list', true)
+    })
+}
 
-    }
+const deletePerson = (id, name) => {
+  if (window.confirm(`Delete ${name}?`)) {
+    personService
+      .getAll()
+      .then((updatedPersons) => {
+        const personStillExists = updatedPersons.some(person => person.id === id)
+
+        if (!personStillExists) {
+          handleMessage(`Information of ${name} has already been removed from server`, true)
+          setPersons(updatedPersons); // Update state with the latest data
+          return
+        }
+
+        personService
+          .remove(id)
+          .then(() => personService.getAll())
+          .then((finalUpdatedPersons) => {
+            setPersons(finalUpdatedPersons || [])
+            handleMessage(`Deleted ${name}`, false)
+          })
+          .catch((error) => {
+            handleMessage(`Error deleting ${name}`, true)
+            personService.getAll().then((finalUpdatedPersons) => setPersons(finalUpdatedPersons || []))
+          })
+      })
+      .catch((error) => {
+        handleMessage("Error fetching person list", true)
+      })
   }
+}
+
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -97,14 +127,14 @@ const App = () => {
     setFilter(event.target.value)
   }
   const handleMessage = (message, isError = false) => {
+    
     setMessage(message);
     setIsError(isError);
-
+    setNewName("")
+    setNewNumber("")
     setTimeout(() => {
       setMessage(null);
     }, 5000)
-    setNewName("")
-    setNewNumber("")
   }
 
   
