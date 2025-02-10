@@ -2,6 +2,17 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
+const listOfBlogs = [
+  { title: 'Clean Code', author: 'Robert C. Martin', likes: 15 },
+  { title: 'The Pragmatic Programmer', author: 'Andy Hunt', likes: 10 },
+  { title: 'Refactoring', author: 'Martin Fowler', likes: 12 },
+  { title: 'The Mythical Man-Month', author: 'Fred Brooks', likes: 8 },
+  { title: 'You Don\'t Know JS', author: 'Kyle Simpson', likes: 14 },
+  { title: 'Eloquent JavaScript', author: 'Marijn Haverbeke', likes: 11 },
+  { title: 'Clean Architecture', author: 'Robert C. Martin', likes: 1 },
+  { title: 'Agile Software Development', author: 'Robert C. Martin', likes: 1 }
+]
+
 test('dummy returns one', () => {
   const blogs = []
 
@@ -72,16 +83,6 @@ describe('most likes for a blog',() => {
 })
 
 describe('most blogs per author', () => {
-  const listOfBlogs = [
-    { title: 'Clean Code', author: 'Robert C. Martin', likes: 15 },
-    { title: 'The Pragmatic Programmer', author: 'Andy Hunt', likes: 10 },
-    { title: 'Refactoring', author: 'Martin Fowler', likes: 12 },
-    { title: 'The Mythical Man-Month', author: 'Fred Brooks', likes: 8 },
-    { title: 'You Don\'t Know JS', author: 'Kyle Simpson', likes: 14 },
-    { title: 'Eloquent JavaScript', author: 'Marijn Haverbeke', likes: 11 },
-    { title: 'Clean Architecture', author: 'Robert C. Martin', likes: 20 },
-    { title: 'Agile Software Development', author: 'Robert C. Martin', likes: 18 }
-  ]
   const mostBlogsAuthor =
     {
       author: 'Robert C. Martin',
@@ -96,6 +97,28 @@ describe('most blogs per author', () => {
 
   test('Returns null if no blogs', () => {
     const result = listHelper.mostBlogs([])
+    console.log(result)
+
+    assert.deepStrictEqual(result, null)
+  })
+
+
+})
+describe('most liked author', () => {
+  const mostBlogsAuthor =
+    {
+      author: 'Robert C. Martin',
+      likes: 17
+    }
+  test('Returns author with most likes', () => {
+    const result = listHelper.mostLikes(listOfBlogs)
+    console.log(result)
+
+    assert.deepStrictEqual(result, mostBlogsAuthor)
+  })
+
+  test('Returns null if no blogs', () => {
+    const result = listHelper.mostLikes([])
     console.log(result)
 
     assert.deepStrictEqual(result, null)
