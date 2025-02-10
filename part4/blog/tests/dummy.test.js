@@ -26,3 +26,47 @@ describe('total likes', () => {
     assert.strictEqual(result, 5)
   })
 })
+
+describe('most likes for a blog',() =>{
+  const listOfBooks =[
+    {
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      likes: 12
+    },
+    {
+      title: "Män som hatar kvinnor",
+      author: "Stig Larsson",
+      likes: 11
+    },
+    {
+      title: "Villospår",
+      author: "Henning Mankell",
+      likes: 10
+    },
+    {
+      title: "Cilkan Tarina",
+      author: "Heather Morris",
+      likes: 9
+    }
+  ]
+  const mostLikesBlog =
+    {
+      title: "Canonical string reduction",
+      author: "Edsger W. Dijkstra",
+      likes: 12
+    }
+  test('Returns blog with most likes if there is a blog', () => {
+    const result = listHelper.favoriteBlog(listOfBooks)
+    console.log(result);
+    
+    assert.deepStrictEqual(result, mostLikesBlog)
+  })
+
+  test('Returns null if no blogs', () => {
+    const result = listHelper.favoriteBlog([])
+    console.log(result);
+    
+    assert.deepStrictEqual(result, null)
+  })
+})
