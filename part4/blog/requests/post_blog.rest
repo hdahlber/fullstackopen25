@@ -2,8 +2,8 @@ POST http://localhost:3001/api/blogs/
 Content-Type: application/json
 
 {
-    "title": "Taisteluni",
-    "author": "Adolf",
+    "title": "Villospår",
+    "author": "Mankell",
     "url":"www.",
     "likes": 6
 }
