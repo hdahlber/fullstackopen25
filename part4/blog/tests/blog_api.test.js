@@ -54,7 +54,7 @@ test('there are two blogs', async () => {
 
 test('every blog contain id', async () => {
   const response = await api.get('/api/blogs')
-  const ids = response.body.map(blog => Blog.hasOwnProperty.call(blog, 'id'))
+  const ids = response.body.map(blog => Blog.prototype.hasOwnProperty.call(blog, 'id'))
   assert.strictEqual(ids.every(id => id === true), true)
 })
 
@@ -73,23 +73,31 @@ test('if the likes property is missing from the request, it will default to the 
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body[2].likes,0)
 })
-test.only('if url missing returns 400', async () => {
+test('if url missing returns 400', async () => {
   await api
     .post('/api/blogs')
     .send(oneBlogNoUrl)
     .expect(400)
 })
-test.only('if title missing returns 400', async () => {
+test('if title missing returns 400', async () => {
   await api
     .post('/api/blogs')
     .send(oneBlogNoTitle)
     .expect(400)
 })
-test.only('if title and url missing returns 400', async () => {
+test('if title and url missing returns 400', async () => {
   await api
     .post('/api/blogs')
     .send(oneBlogOnlyAuthor)
     .expect(400)
+
+})
+test('Deleting person successfully return 204', async () => {
+  const response = await api.get('/api/blogs')
+  const blogId = response.body[0].id
+  await api
+    .delete(`/api/blogs/${blogId}`)
+    .expect(204)
 })
 
 
