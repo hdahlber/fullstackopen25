@@ -17,6 +17,11 @@ const listOfBlogs = [
     { title: 'Clean Architecture', author: 'Robert C. Martin', likes: 1 },
     { title: 'Agile Software Development', author: 'Robert C. Martin', likes: 1 }
   ]
+const oneBlog = {
+    title: 'Clean Architecture', 
+    author: 'Robert C. Martin', 
+    likes: 1 
+}
 
 
 beforeEach(async () => {
@@ -45,6 +50,15 @@ test.only('every blog contain id', async () => {
     const response = await api.get('/api/blogs')
     const ids = response.body.map(blog => blog.hasOwnProperty('id'))
     assert.strictEqual(ids.every(id => id === true), true)
+})
+
+test.only('HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => {
+    await api
+        .post('/api/blogs')
+        .send(oneBlog)
+        .expect(201)
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length,3)
 })
     
 
