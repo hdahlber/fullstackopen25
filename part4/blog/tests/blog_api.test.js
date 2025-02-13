@@ -20,7 +20,6 @@ const listOfBlogs = [
 const oneBlog = {
     title: 'Clean Architecture', 
     author: 'Robert C. Martin', 
-    likes: 1 
 }
 
 
@@ -33,33 +32,41 @@ beforeEach(async () => {
 })
 
 
-test.only('blogs are returned as json', async () => {
+test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
   })
 
-test.only('there are two blogs', async () => {
+test('there are two blogs', async () => {
     const response = await api.get('/api/blogs')
   
     assert.strictEqual(response.body.length, 2)
 })
 
-test.only('every blog contain id', async () => {
+test('every blog contain id', async () => {
     const response = await api.get('/api/blogs')
     const ids = response.body.map(blog => blog.hasOwnProperty('id'))
     assert.strictEqual(ids.every(id => id === true), true)
 })
 
-test.only('HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => {
+test('HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => {
+    await api
+        .post('/api/blogs')
+        .send(oneBlog)
+        .expect(201)
+})
+
+test.only('if the likes property is missing from the request, it will default to the value 0', async () => {
     await api
         .post('/api/blogs')
         .send(oneBlog)
         .expect(201)
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length,3)
+    assert.strictEqual(response.body[2].likes,0)
 })
+
     
 
   
