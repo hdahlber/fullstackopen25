@@ -39,7 +39,15 @@ test.only('there are two blogs', async () => {
     const response = await api.get('/api/blogs')
   
     assert.strictEqual(response.body.length, 2)
-  })
+})
+
+test.only('every blog contain id', async () => {
+    const response = await api.get('/api/blogs')
+    const ids = response.body.map(blog => blog.hasOwnProperty('id'))
+    assert.strictEqual(ids.every(id => id === true), true)
+})
+    
+
   
   after(async () => {
     await mongoose.connection.close()
