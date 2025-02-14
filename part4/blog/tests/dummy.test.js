@@ -69,14 +69,14 @@ describe('most likes for a blog',() => {
     }
   test('Returns blog with most likes if there is a blog', () => {
     const result = listHelper.favoriteBlog(listOfBooks)
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, mostLikesBlog)
   })
 
   test('Returns null if no blogs', () => {
     const result = listHelper.favoriteBlog([])
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, null)
   })
@@ -90,14 +90,14 @@ describe('most blogs per author', () => {
     }
   test('Returns author with most blogs', () => {
     const result = listHelper.mostBlogs(listOfBlogs)
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, mostBlogsAuthor)
   })
 
   test('Returns null if no blogs', () => {
     const result = listHelper.mostBlogs([])
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, null)
   })
@@ -112,14 +112,14 @@ describe('most liked author', () => {
     }
   test('Returns author with most likes', () => {
     const result = listHelper.mostLikes(listOfBlogs)
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, mostBlogsAuthor)
   })
 
   test('Returns null if no blogs', () => {
     const result = listHelper.mostLikes([])
-    console.log(result)
+    //console.log(result)
 
     assert.deepStrictEqual(result, null)
   })
