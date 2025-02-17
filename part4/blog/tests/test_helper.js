@@ -24,9 +24,9 @@ const oneBlogOnlyAuthor = {
 }
 
 const oneUser ={
-  "username": "root",
-  "name": "Superuser",
-  "password": "salainen"
+  'username': 'root',
+  'name': 'Superuser',
+  'password': 'salainen'
 }
 
 const blogsInDb = async () => {
