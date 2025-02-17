@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvIiwiaWQiOiI2N2IyZjY0MjRmMDFiMmFlOWEyOWNjZDEiLCJpYXQiOjE3Mzk3ODczNjIsImV4cCI6MTczOTc5MDk2Mn0.ieSVD2er8C5iUtFFMjFljeKc_TznHfEOqIrP8STMdjw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImhlbGxvIiwiaWQiOiI2N2IzMGQyNjEzZTAyODE2NDQyYjVhYzUiLCJpYXQiOjE3Mzk4MTQ3NjUsImV4cCI6MTczOTgxODM2NX0.B0Ys0YGTY38G87zboSfwd5J4b1ztyYsKmtrD7WUZqHE
+Content-Type: application/json
 
 {
   "title": "tester",
   "author": "tester",
-  "url": "https:/asas/example.com/",
+  "url": "https://example.com/tester",
   "likes": 5
 }
