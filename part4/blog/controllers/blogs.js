@@ -12,14 +12,14 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response,next) => {
-  logger.info('Received token:', request.token)
+  //logger.info('Received token:', request.token)
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  logger.info('Decoded token:', decodedToken)
+  //logger.info('Decoded token:', decodedToken)
   if (!decodedToken.id) {
     return response.status(401).json({ error: 'token invalid' })
   }
   const user = await User.findById(decodedToken.id)
-  logger.info('User found:', user)
+  //logger.info('User found:', user)
   const blog = new Blog({
     ...request.body,
     user: user.id
