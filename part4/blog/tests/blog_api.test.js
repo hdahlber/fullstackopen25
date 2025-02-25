@@ -27,11 +27,11 @@ describe('when there are some notes saved initially', () => {
       .expect('Content-Type', /application\/json/)
     const loginResponse = await api
       .post('/api/login')
-      .send({ username: newUser.username,password: newUser.password})
+      .send({ username: newUser.username,password: newUser.password })
       .expect(200)
       .expect('Content-Type', /application\/json/)
     token = loginResponse.body.token
-    
+
 
 
   })
@@ -75,46 +75,46 @@ describe('when there are some notes saved initially', () => {
       const blogsAtEnd= await helper.blogsInDb()
       assert.strictEqual(blogsAtEnd[blogsAtEnd.length-1].likes,0)
     })
-  
 
-  test('fails with status code 400 if url is missing', async () => {
-    await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlogNoUrl)
-      .expect(400)
-    const blogsAtEnd= await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
-  })
 
-  test('fails with status code 400 if title is missing', async () => {
-    await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlogNoTitle)
-      .expect(400)
-    const blogsAtEnd= await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
+    test('fails with status code 400 if url is missing', async () => {
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlogNoUrl)
+        .expect(400)
+      const blogsAtEnd= await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
+    })
+
+    test('fails with status code 400 if title is missing', async () => {
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlogNoTitle)
+        .expect(400)
+      const blogsAtEnd= await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
+    })
+    test('fails with status code 400 if title and url is missing', async () => {
+      await api
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlogOnlyAuthor)
+        .expect(400)
+      const blogsAtEnd= await helper.blogsInDb()
+      assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
+    })
   })
-  test('fails with status code 400 if title and url is missing', async () => {
-    await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlogOnlyAuthor)
-      .expect(400)
-    const blogsAtEnd= await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length,helper.listOfBlogs.length)
-  })
-})
 
   describe('deleting a blog', () => {
 
     test('succeeds with status code 204 if id is valid', async () => {
       const createdBlogResponse = await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlog)
-      .expect(201)
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlog)
+        .expect(201)
       const blogId = createdBlogResponse.body.id
       await api
         .delete(`/api/blogs/${blogId}`)
@@ -136,10 +136,10 @@ describe('when there are some notes saved initially', () => {
   describe('update a blog with likes', () => {
     test('succeeds with status code 200 if likes is valid', async () => {
       const createdBlogResponse = await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlog)
-      .expect(201)
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlog)
+        .expect(201)
       const blogId = createdBlogResponse.body.id
       await api
         .put(`/api/blogs/${blogId}`)
@@ -153,12 +153,12 @@ describe('when there are some notes saved initially', () => {
       assert.strictEqual(updatedBlog.likes, 555)
     })
     test('fails with status code 400 if likes is invalid', async () => {
-      
+
       const createdBlogResponse = await api
-      .post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(helper.oneBlog)
-      .expect(201)
+        .post('/api/blogs')
+        .set('Authorization', `Bearer ${token}`)
+        .send(helper.oneBlog)
+        .expect(201)
       const blogId = createdBlogResponse.body.id
       const blogsAtStart = await helper.blogsInDb()
       const originalBlog = blogsAtStart.find(blog => blog.id === blogId)
