@@ -2,17 +2,20 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [errorMessage, setErrorMessage] = useState('')
+  const [newMessage, setMessage] = useState(null)
   const [title,setTitle] = useState('')
   const [author,setAuthor] = useState('')
   const [url,setUrl] = useState('')
   const [refresh,setRefresh] = useState(false)
+  const [isError,setIsError] = useState(false)
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -43,11 +46,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      handleMessage('Success login', false)
     } catch (exception) {
-      setErrorMessage('Wrong credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      handleMessage('Wrong credentials', true)
     }
     
   }
@@ -64,13 +65,12 @@ const App = () => {
       setAuthor('')
       setUrl('')
       setRefresh(true)
+      handleMessage('Success creating new blog', false)
 
 
     }catch (exception){
-      setErrorMessage('Failed to create a new blog')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      setIsError(true)
+      handleMessage('Failed to create a new blog', true)
     }
   }
 
@@ -131,11 +131,20 @@ const App = () => {
     </form>   
   )
 
+  const handleMessage = (message, isError = false) => {
+    setIsError(isError)
+    setMessage(message)
+    console.log(isError)
+    setTimeout(() => {
+      setMessage(null)
+    }, 5000)
+  }
+
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
-        {errorMessage}
+        <Notification message={newMessage} isError={isError} />
         {loginForm()}
       </div>
     )
@@ -144,7 +153,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      {errorMessage}
+      <Notification message={newMessage} isError={isError} />
       <p>{`logged in as ${user.username}`}
       <button onClick={() => {
         window.localStorage.removeItem('loggedBlogappUser')

@@ -7,7 +7,7 @@ const Notification = ({ message, isError }) => {
     <div className={isError ? 'error' : 'success'}>
       {message}
     </div>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification
