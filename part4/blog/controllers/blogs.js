@@ -53,14 +53,15 @@ blogsRouter.delete('/:id', async (request, response) => {
 
 
 blogsRouter.put('/:id', async (request, response) => {
-  const blog = {
-    likes: request.body.likes,
-    author: request.body.author,
-    url: request.body.url,
-    title: request.body.title
+  const user = request.user
+  const blog = await Blog.findById(request.params.id)
+  if ( blog.user.toString() === user.id.toString() ){
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,request.body, { new: true}).populate('user', { name: 1, username: 1 })
+    response.status(200).json(updatedBlog)
   }
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-  response.status(200).json(updatedBlog)
+  else {
+    response.status(401).json({ error: 'missing premission to do this' })
+  }
 })
 
 

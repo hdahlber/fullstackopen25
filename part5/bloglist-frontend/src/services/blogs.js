@@ -23,9 +23,16 @@ const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }
 
-const update = (id, newObject) => {
-  const request = axios.put(`${ baseUrl }/${id}`, newObject)
-  return request.then(response => response.data)
+const update = async (id, newObject) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  //console.log('Sending PUT request to:', `${baseUrl}/${id}`)
+  //console.log('Request body:', newObject)
+  //console.log('config:', config)
+
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
+  return response.data
 }
 
 
