@@ -65,6 +65,21 @@ const App = () => {
         })
 
   }
+  const removeBlog = (id) => {
+
+    blogService
+      .remove(id)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        handleMessage('Success deleting blog', false)
+      })
+      .catch((error) => {
+        setIsError(true)
+        handleMessage("failed to delete blog", true)
+        })
+      
+  }
+
   const updateBlog = (id,blogObject) => {
     blogService
       .update(id, blogObject) 
@@ -145,7 +160,7 @@ const App = () => {
       </Togglable>
       
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateBlog={updateBlog}/>
+        <Blog key={blog.id} blog={blog} updateBlog={updateBlog} remove = {removeBlog}/>
       )}
     </div>
   )
