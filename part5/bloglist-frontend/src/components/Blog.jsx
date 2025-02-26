@@ -10,7 +10,6 @@ const Blog = ({ blog , updateBlog, remove }) => {
     event.preventDefault()
     //console.log(blog)
     //console.log(blog.id)
-    
     const updatedBlog = {
       user: blog.user.id,
       likes: blog.likes + 1,
@@ -21,10 +20,10 @@ const Blog = ({ blog , updateBlog, remove }) => {
 
     updateBlog(blog.id, updatedBlog)
   }
-  const removeBlog = (event) =>{
+  const removeBlog = (event) => {
     event.preventDefault()
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-    remove(blog.id)
+      remove(blog.id)
     }
   }
 
@@ -36,14 +35,14 @@ const Blog = ({ blog , updateBlog, remove }) => {
     marginBottom: 5
   }
   return(
-  <div style={blogStyle}>
-    <div>
-      {blog.title} {blog.author}
-      <button onClick={toggleDetails}>
+    <div style={blogStyle}>
+      <div>
+        {blog.title} {blog.author}
+        <button onClick={toggleDetails}>
           {showDetails ? 'hide' : 'view'}
-      </button>
-    </div>
-    {showDetails && (
+        </button>
+      </div>
+      {showDetails && (
         <div>
           <p>{blog.url}</p>
           <p>likes {blog.likes} <button onClick={addLike}>like</button></p>

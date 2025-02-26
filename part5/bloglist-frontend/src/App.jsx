@@ -14,13 +14,13 @@ const App = () => {
   const [newMessage, setMessage] = useState(null)
   const [isError,setIsError] = useState(false)
   const blogFormRef = useRef()
-  
+
 
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const App = () => {
       })
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      ) 
+      )
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -49,7 +49,7 @@ const App = () => {
     } catch (exception) {
       handleMessage('Wrong credentials', true)
     }
-    
+
   }
   const addBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
@@ -61,8 +61,8 @@ const App = () => {
       })
       .catch((error) => {
         setIsError(true)
-        handleMessage("failed to create blog", true)
-        })
+        handleMessage('failed to create blog', true)
+      })
 
   }
   const removeBlog = (id) => {
@@ -75,14 +75,14 @@ const App = () => {
       })
       .catch((error) => {
         setIsError(true)
-        handleMessage("failed to delete blog", true)
-        })
-      
+        handleMessage('failed to delete blog', true)
+      })
+
   }
 
   const updateBlog = (id,blogObject) => {
     blogService
-      .update(id, blogObject) 
+      .update(id, blogObject)
       .then((returnedBlog) => {
         setBlogs(blogs
           .map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog)
@@ -94,14 +94,14 @@ const App = () => {
         handleMessage('Failed to update blog', true)
       })
   }
-  
-  
+
+
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -110,7 +110,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -118,9 +118,9 @@ const App = () => {
         />
       </div>
       <button type="submit">login</button>
-    </form>      
+    </form>
   )
-  
+
 
   const handleMessage = (message, isError = false) => {
     setIsError(isError)
@@ -140,7 +140,7 @@ const App = () => {
       </div>
     )
   }
- 
+
 
   return (
     <div>
@@ -158,7 +158,7 @@ const App = () => {
           createBlog = {addBlog}
         />
       </Togglable>
-      
+
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateBlog={updateBlog} remove = {removeBlog}/>
       )}
