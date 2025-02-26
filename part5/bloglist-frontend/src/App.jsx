@@ -71,11 +71,12 @@ const App = () => {
       .then((returnedBlog) => {
         setBlogs(blogs
           .map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog)
+          .sort((a, b) => b.likes - a.likes)
         )
 
       })
       .catch((error) => {
-        handleMessage('Failed to update blog!!', true)
+        handleMessage('Failed to update blog', true)
       })
   }
   
