@@ -12,10 +12,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newMessage, setMessage] = useState(null)
-  const [title,setTitle] = useState('')
-  const [author,setAuthor] = useState('')
-  const [url,setUrl] = useState('')
-  const [refresh,setRefresh] = useState(false)
   const [isError,setIsError] = useState(false)
   const blogFormRef = useRef()
   
@@ -34,8 +30,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
     }
-    setRefresh(false)
-  }, [refresh])
+  }, [])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -56,26 +51,26 @@ const App = () => {
     }
     
   }
-  const handleBlog = async (event) => {
-    event.preventDefault()
-    try {
-      const blog = await blogService.create({
-        title,
-        author,
-        url
+  const addBlog = (blogObject) => {
+    blogFormRef.current.toggleVisibility()
+    blogService
+      .create(blogObject)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        handleMessage('Success creating new blog', false)
       })
-      setBlogs(blogs.concat(blog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-      setRefresh(true)
-      blogFormRef.current.toggleVisibility()
-      handleMessage('Success creating new blog', false)
-    } catch (exception) {
-      setIsError(true)
-      handleMessage('Failed to create a new blog', true)
-    }
+      .catch((error) => {
+        setIsError(true)
+        handleMessage("failed to create blog", true)
+        })
+
+
+
+      
+      
+  
   }
+ 
   
 
   const loginForm = () => (
@@ -134,20 +129,11 @@ const App = () => {
       }}>
         logout
       </button>
-      
       <Togglable buttonLabel="new note" ref={blogFormRef}>
-     
         <BlogForm
-          title={title}
-          author={author}
-          url={url}
-          handleTitleChange={({ target }) => setTitle(target.value)}
-          handleAuthorChange={({ target }) => setAuthor(target.value)}
-          handleUrlChange={({ target }) => setUrl(target.value)}
-          handleBlog={handleBlog}
+          createBlog = {addBlog}
         />
       </Togglable>
-    
       
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
