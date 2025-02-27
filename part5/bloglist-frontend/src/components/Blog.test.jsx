@@ -45,6 +45,7 @@ test('renders details when button clicked', async () =>  {
 
 })
 
+
 test('clicking the like button twice calls event handler twice', async () =>  {
   const mockHandler = vi.fn()
   const blog = {
