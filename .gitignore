@@ -3,3 +3,4 @@ dist/
 **/eslint.config.js
 **/.env
 **/.dockerignore
+**/.vscode

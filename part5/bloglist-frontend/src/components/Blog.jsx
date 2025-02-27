@@ -10,6 +10,7 @@ const Blog = ({ blog , updateBlog, remove }) => {
     event.preventDefault()
     //console.log(blog)
     //console.log(blog.id)
+
     const updatedBlog = {
       user: blog.user.id,
       likes: blog.likes + 1,
@@ -35,18 +36,19 @@ const Blog = ({ blog , updateBlog, remove }) => {
     marginBottom: 5
   }
   return(
-    <div style={blogStyle}>
-      <div>
-        {blog.title} {blog.author}
+    <div style={blogStyle} className='blog'>
+      <div className='blog-short'>
+        <span className='blog-title'>{blog.title}</span>
+        <span className='blog-author'>{blog.author}</span>
         <button onClick={toggleDetails}>
           {showDetails ? 'hide' : 'view'}
         </button>
       </div>
       {showDetails && (
-        <div>
-          <p>{blog.url}</p>
-          <p>likes {blog.likes} <button onClick={addLike}>like</button></p>
-          <p>{blog.user.name}</p>
+        <div className='blog-details'>
+          <p className='blog-url'>{blog.url}</p>
+          <p className='blog-likes'>likes {blog.likes} <button onClick={addLike}>like</button></p>
+          <p className='blog-user'>{blog.user.name}</p>
           <p><button onClick={removeBlog}>remove</button></p>
         </div>
       )}
