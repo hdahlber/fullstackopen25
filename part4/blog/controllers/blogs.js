@@ -63,6 +63,17 @@ blogsRouter.put('/:id', async (request, response) => {
     response.status(401).json({ error: 'missing premission to do this' })
   }
 })
+blogsRouter.put('/:id/like', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (!blog) {
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+
+  blog.likes += 1
+  const updatedBlog = await blog.save()
+  await updatedBlog.populate('user', { name: 1, username: 1 })
+  response.status(200).json(updatedBlog)
+})
 
 
 module.exports = blogsRouter

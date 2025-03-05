@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog , updateBlog, remove, user }) => {
+const Blog = ({ blog , likeBlog, remove, user }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const toggleDetails = () => {
@@ -11,15 +11,15 @@ const Blog = ({ blog , updateBlog, remove, user }) => {
     //console.log(blog)
     //console.log(blog.id)
 
-    const updatedBlog = {
+    const likedBlog = {
       user: blog.user.id,
-      likes: blog.likes + 1,
+      likes: blog.likes,
       author: blog.author,
       title: blog.title,
       url: blog.url
     }
 
-    updateBlog(blog.id, updatedBlog)
+    likeBlog(blog.id, likedBlog)
   }
   const removeBlog = (event) => {
     event.preventDefault()

@@ -80,21 +80,21 @@ const App = () => {
 
   }
 
-  const updateBlog = (id,blogObject) => {
+  const likeBlog = (id) => {
     blogService
-      .update(id, blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs
-          .map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog)
-          .sort((a, b) => b.likes - a.likes)
-        )
-
+      .like(id) 
+      .then((updatedBlog) => {
+        setBlogs(
+          blogs.map((blog) =>
+            blog.id !== updatedBlog.id ? blog : updatedBlog
+          ).sort((a, b) => b.likes - a.likes)
+        );
       })
       .catch((error) => {
-        handleMessage('Failed to update blog', true)
-      })
-  }
-
+        handleMessage('Failed to like the blog', true)
+      });
+  };
+  
 
 
   const loginForm = () => (
@@ -162,7 +162,7 @@ const App = () => {
       </Togglable>
 
       {blogs.map(blog => 
-      <Blog key={blog.id} blog={blog} updateBlog={updateBlog} remove={removeBlog} user={user} />
+      <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
       )}
     </div>
   )

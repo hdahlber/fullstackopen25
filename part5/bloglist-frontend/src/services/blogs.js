@@ -43,6 +43,13 @@ const remove = async(id) => {
   const response = await axios.delete(`${baseUrl}/${id}`, config)
   return response.data
 }
+const like = async (id) => {
+  const config = {
+    headers: { Authorization: token },
+  }
+  const response = await axios.put(`${baseUrl}/${id}/like`, {}, config)
+  return response.data
+}
 
 
-export default { getAll, create, update, remove, setToken }
+export default { getAll, create, update, remove, setToken, like }
