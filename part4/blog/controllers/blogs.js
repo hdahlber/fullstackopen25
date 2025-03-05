@@ -56,7 +56,7 @@ blogsRouter.put('/:id', async (request, response) => {
   const user = request.user
   const blog = await Blog.findById(request.params.id)
   if ( blog.user.toString() === user.id.toString() ){
-    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,request.body, { new: true}).populate('user', { name: 1, username: 1 })
+    const updatedBlog = await Blog.findByIdAndUpdate(request.params.id,request.body, { new: true }).populate('user', { name: 1, username: 1 })
     response.status(200).json(updatedBlog)
   }
   else {
