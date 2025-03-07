@@ -56,7 +56,8 @@ const App = () => {
     blogService
       .create(blogObject)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        const completeBlog = { ...returnedBlog, user }
+        setBlogs(blogs.concat(completeBlog))
         handleMessage('Success creating new blog', false)
       })
       .catch((error) => {
