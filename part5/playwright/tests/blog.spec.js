@@ -76,15 +76,26 @@ describe('Blog app', () => {
       await page.getByRole('button', { name: 'create a new blog' }).click()
       await expect(page.locator('.blog-title').filter({ hasText: 'testerTitle' }).first()).toBeVisible()
     })
+    test('a blog can be liked', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      const likesElement = await page.locator('.blog-likes')
+      const likesText = await likesElement.textContent()
+      const likesCountStart = parseInt(likesText.match(/\d+/)[0])
+      await page.getByRole('button', { name: 'like' }).click()
+      await expect(likesElement).toContainText(`likes ${likesCountStart + 1}`)
+    
+    })  
 
-  test('a blog can be liked', async ({ page }) => {
-    await page.getByRole('button', { name: 'view' }).click()
-    const likesElement = await page.locator('.blog-likes')
-    const likesText = await likesElement.textContent()
-    const likesCountStart = parseInt(likesText.match(/\d+/)[0])
-    await page.getByRole('button', { name: 'like' }).click()
-    await expect(likesElement).toContainText(`likes ${likesCountStart + 1}`)
-  
+    test('a blog can be removed', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      page.once('dialog', async dialog => {
+        await dialog.accept()
+      })
+      await page.getByRole('button', { name: 'remove' }).click()
+      await expect(page.locator('.blog-title').filter({ hasText: 'testerTitle' })).not.toBeVisible()
+      await expect(page.getByText('Success deleting blog')).toBeVisible({timeout: 5000})
+      
+
     })  
   
   })
