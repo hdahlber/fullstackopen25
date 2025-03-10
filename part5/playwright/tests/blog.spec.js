@@ -1,5 +1,5 @@
-const { test, expect, beforeEach,beforeAll, describe } = require('@playwright/test')
-
+const { test, expect, beforeEach, describe } = require('@playwright/test')
+const { loginWith,createBlog } = require('./helper')
 describe('Blog app', () => {
   beforeEach(async ({ page,request }) => {
     await request.post('http://localhost:3001/api/testing/reset')
@@ -7,6 +7,13 @@ describe('Blog app', () => {
       data: {
         name: 'Esko Eskola',
         username: 'esko',
+        password: 'salainen',
+      },
+    })
+    await request.post('http://localhost:3001/api/users', {
+      data: {
+        name: 'Namn Namnsson',
+        username: 'namn',
         password: 'salainen',
       },
     })
@@ -26,18 +33,12 @@ describe('Blog app', () => {
   })
   
   test('login succeeds with correct credentials', async ({ page }) => {
-    await page.getByRole('button', { name: 'login' })
-    await page.getByTestId('username').fill('esko')
-    await page.getByTestId('password').fill('salainen')
-    await page.getByRole('button', { name: 'login' }).click()
+    await loginWith(page,'esko','salainen')
     await expect(page.getByText('logged in as esko')).toBeVisible()
   })
 
   test('login fails with wrong credentials', async ({ page }) => {
-    await page.getByRole('button', { name: 'login' })
-    await page.getByTestId('username').fill('wronguser')
-    await page.getByTestId('password').fill('wrongpassword')
-    await page.getByRole('button', { name: 'login' }).click()
+    await loginWith(page,'wrong','wrong')
     await expect(page.getByText('logged in as wronguser')).not.toBeVisible()
     await expect(page.getByText('Wrong credentials')).toBeVisible({timeout: 5000})
 
@@ -46,34 +47,18 @@ describe('Blog app', () => {
   
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'login' })
-      await page.getByTestId('username').fill('esko')
-      await page.getByTestId('password').fill('salainen')
-      await page.getByRole('button', { name: 'login' }).click()
+      await loginWith(page,'esko','salainen')
     })
   
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'new note' }).click()
-      await page.getByPlaceholder('Title').fill('testerTitle')
-      await page.getByPlaceholder('Author').fill('testerAuthor')
-      await page.getByPlaceholder('Url').fill('testerUrl')
-      await page.getByRole('button', { name: 'create a new blog' }).click()
+      await createBlog(page,'testerTitle','testerAuthor','testerUrl')
       await expect(page.locator('.blog-title').filter({ hasText: 'testerTitle' }).first()).toBeVisible()
-
-
   })
 })
-  describe('When logged in and a blog', () => {
+  describe('When logged in and owns a blog', () => {
     beforeEach(async ({ page }) => {
-      await page.getByRole('button', { name: 'login' })
-      await page.getByTestId('username').fill('esko')
-      await page.getByTestId('password').fill('salainen')
-      await page.getByRole('button', { name: 'login' }).click()
-      await page.getByRole('button', { name: 'new note' }).click()
-      await page.getByPlaceholder('Title').fill('testerTitle')
-      await page.getByPlaceholder('Author').fill('testerAuthor')
-      await page.getByPlaceholder('Url').fill('testerUrl')
-      await page.getByRole('button', { name: 'create a new blog' }).click()
+      await loginWith(page,'esko','salainen')
+      await createBlog(page,'testerTitle','testerAuthor','testerUrl')
       await expect(page.locator('.blog-title').filter({ hasText: 'testerTitle' }).first()).toBeVisible()
     })
     test('a blog can be liked', async ({ page }) => {
@@ -99,4 +84,21 @@ describe('Blog app', () => {
     })  
   
   })
+  describe('When logged in not owner of any blog', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page,'esko','salainen')
+      await createBlog(page,'testerTitle','testerAuthor','testerUrl')
+      await page.getByRole('button', { name: 'logout'}).click()
+      await loginWith(page,'namn','salainen')
+
+    })
+    test('an blogs delete button can not bee seen', async ({ page }) => {
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+    
+    })
+
+
+  })
+
 })
