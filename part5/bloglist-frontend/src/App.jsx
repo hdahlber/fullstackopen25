@@ -83,19 +83,19 @@ const App = () => {
 
   const likeBlog = (id) => {
     blogService
-      .like(id) 
+      .like(id)
       .then((updatedBlog) => {
         setBlogs(
           blogs.map((blog) =>
             blog.id !== updatedBlog.id ? blog : updatedBlog
           ).sort((a, b) => b.likes - a.likes)
-        );
+        )
       })
       .catch((error) => {
         handleMessage('Failed to like the blog', true)
-      });
-  };
-  
+      })
+  }
+
 
 
   const loginForm = () => (
@@ -162,8 +162,8 @@ const App = () => {
         />
       </Togglable>
 
-      {blogs.map(blog => 
-      <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
+      {blogs.map(blog =>
+        <Blog key={blog.id} blog={blog} likeBlog={likeBlog} remove={removeBlog} user={user} />
       )}
     </div>
   )

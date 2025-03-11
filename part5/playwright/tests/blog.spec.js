@@ -97,8 +97,55 @@ describe('Blog app', () => {
       await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
     
     })
+  })
+  describe('When logged in and more than 1 blog exists', () => {
+    beforeEach(async ({ page }) => {
+      await loginWith(page, 'esko', 'salainen');
+      await createBlog(page, 'testerTitle1', 'testerAuthor', 'testerUrl')
+      await createBlog(page, 'testerTitle2', 'testerAuthor2', 'testerUrl2')
+      await createBlog(page, 'testerTitle3', 'testerAuthor3', 'testerUrl3')
+    })
+    test('blogs are ordered by like', async ({ page }) => {
+      const blog1 = page.locator('.blog').filter({ hasText: 'testerTitle1' })
+      const blog2 = page.locator('.blog').filter({ hasText: 'testerTitle2' })
+      const blog3 = page.locator('.blog').filter({ hasText: 'testerTitle3' })
 
+      await blog1.locator('.blog-short button:has-text("view")').first().click()
+      await blog2.locator('.blog-short button:has-text("view")').first().click()
+      await blog3.locator('.blog-short button:has-text("view")').first().click()
 
+      const like1 = blog1.locator('.blog-details button:has-text("like")')
+      const like2 = blog2.locator('.blog-details button:has-text("like")')
+      const like3 = blog3.locator('.blog-details button:has-text("like")')
+
+      await like3.first().click()
+      await like3.first().click()
+      await like3.first().click()
+      await like2.first().click()
+      await like2.first().click()
+      await like1.first().click()
+
+      await page.waitForTimeout(3000)
+
+      const blogTitles = await page.locator('.blog-title').allTextContents()
+      expect(blogTitles).toEqual(['testerTitle3', 'testerTitle2', 'testerTitle1'])
+
+      const getLikeCount = async (blog) => {
+        const likeText = await blog.locator('.blog-likes').textContent()
+        return parseInt(likeText.match(/\d+/)[0], 10)
+      }
+
+      const likes1 = await getLikeCount(blog1)
+      const likes2 = await getLikeCount(blog2)
+      const likes3 = await getLikeCount(blog3)
+  
+      expect(likes1).toBe(1)
+      expect(likes2).toBe(2)
+      expect(likes3).toBe(3)
+    
+
+    })
   })
 
 })
+  
