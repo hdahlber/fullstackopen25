@@ -9,6 +9,7 @@ const App = () => {
     console.log('vote', id)
     dispatch(giveVote(id))
   }
+  
 
   return (
     <div>
